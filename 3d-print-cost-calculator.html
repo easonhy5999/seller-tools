@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D Print Cost Calculator – How Much to Charge for a 3D Print (Free)</title>
+<meta name="description" content="Free 3D print cost calculator: filament, electricity, machine wear, your time and failed prints. Get your real cost per print and the price to quote a customer.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<nav><a href="index.html">Free seller tools</a><a href="etsy-fee-calculator.html">Etsy fee calculator</a><a class="on" href="3d-print-cost-calculator.html">3D print cost calculator</a></nav>
+<h1>3D Print Cost Calculator</h1>
+<p class="lead">Type the grams and hours from your slicer. Get your real cost and the price to quote.</p>
+
+<div class="grid">
+  <div class="card">
+    <h2>This print</h2>
+    <label>Filament used (g)<input type="number" id="grams" value="200" step="1" min="0"></label>
+    <label>Print time (hours)<input type="number" id="hours" value="10" step="0.1" min="0"></label>
+    <label><span>Your hands-on time (min)<small>setup, removal, cleanup</small></span><input type="number" id="minutes" value="20" step="1" min="0"></label>
+    <label>Extras + packaging ($)<input type="number" id="extras" value="0" step="0.01" min="0"></label>
+    <h2 style="margin-top:18px">Your setup</h2>
+    <label>Spool price ($)<input type="number" id="spool" value="20" step="0.5" min="0"></label>
+    <label>Spool weight (g)<input type="number" id="spoolG" value="1000" step="50" min="1"></label>
+    <label>Printer price ($)<input type="number" id="printer" value="700" step="10" min="0"></label>
+    <label><span>Printer lifetime (hours)<small>before it needs replacing</small></span><input type="number" id="life" value="3000" step="100" min="1"></label>
+    <label><span>Maintenance per hour ($)<small>nozzles, belts, plates</small></span><input type="number" id="maint" value="0.056" step="0.01" min="0"></label>
+    <label>Printer power (watts)<input type="number" id="watts" value="120" step="10" min="0"></label>
+    <label>Electricity ($ per kWh)<input type="number" id="kwh" value="0.22" step="0.01" min="0"></label>
+    <label>Your hourly rate ($)<input type="number" id="rate" value="15" step="0.5" min="0"></label>
+    <label>Failed-print buffer (%)<input type="number" id="fail" value="10" step="1" min="0"></label>
+    <label>Markup (%)<input type="number" id="markup" value="60" step="5" min="0"></label>
+  </div>
+
+  <div class="card">
+    <h2>Cost breakdown</h2>
+    <div class="row"><span>Filament</span><span id="o_fil"></span></div>
+    <div class="row"><span>Machine wear + maintenance</span><span id="o_wear"></span></div>
+    <div class="row"><span>Electricity</span><span id="o_power"></span></div>
+    <div class="row"><span>Your time</span><span id="o_time"></span></div>
+    <div class="row"><span>Extras + packaging</span><span id="o_extra"></span></div>
+    <div class="row"><span>Failed-print buffer</span><span id="o_fail"></span></div>
+    <div class="row total"><span>Real cost</span><span id="o_cost"></span></div>
+    <div class="big"><div class="lab">Quote this price</div><div class="val" id="o_quote"></div>
+      <div id="o_profit"></div></div>
+    <p class="verdict" style="font-weight:400;color:var(--muted)">Rounded up to the next $0.50. Per-gram cost: <b id="o_gram"></b> · per machine hour: <b id="o_hour"></b></p>
+  </div>
+</div>
+
+<div class="cta">
+  <div><h3>Quoting prints every week?</h3>
+  <p>The 3D Print Cost Calculator spreadsheet saves your printers and filaments, quotes in 10 seconds, and keeps a job log with a profit dashboard. Works in Excel and Google Sheets.</p></div>
+  <a class="btn" href="https://easonhy.gumroad.com/l/xragm">Get the spreadsheet – $9.99</a>
+</div>
+
+<div class="notes">
+  <h2>How much should I charge for a 3D print?</h2>
+  <p>Most people price a print by filament alone. A 200 g print uses about $4 of PLA, but filament is only part of the cost. Ten hours of machine time wears out nozzles, belts and the printer itself, and uses power. Your time for setup and cleanup counts too, and some prints fail.</p>
+  <p>Add those together for your <b>real cost</b>, then add a markup for profit. With the default numbers above, a 10-hour, 200 g print really costs about $13, so you'd quote around $21, not $10.</p>
+  <h2>What markup should I use?</h2>
+  <p>Many sellers use 50–100% on top of real cost for one-off custom prints, and less for large repeat orders. If customers never push back on price, your markup is probably too low.</p>
+</div>
+<footer>Free tool by <a href="https://easonhy.gumroad.com">Eason's planner &amp; seller tools</a>. Nothing you type leaves your browser.</footer>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const v = id => parseFloat($(id).value) || 0;
+const m = x => "$" + x.toFixed(2);
+function calc() {
+  const fil = v("grams") * v("spool") / v("spoolG");
+  const perHourWear = v("printer") / v("life") + v("maint");
+  const perHourPower = v("watts") / 1000 * v("kwh");
+  const wear = v("hours") * perHourWear, power = v("hours") * perHourPower;
+  const time = v("minutes") / 60 * v("rate");
+  const fail = (fil + wear + power) * v("fail") / 100;
+  const cost = fil + wear + power + time + v("extras") + fail;
+  const quote = Math.ceil(cost * (1 + v("markup") / 100) * 2) / 2;
+  $("o_fil").textContent = m(fil); $("o_wear").textContent = m(wear); $("o_power").textContent = m(power);
+  $("o_time").textContent = m(time); $("o_extra").textContent = m(v("extras")); $("o_fail").textContent = m(fail);
+  $("o_cost").textContent = m(cost); $("o_quote").textContent = m(quote);
+  $("o_profit").textContent = "Profit: " + m(quote - cost);
+  $("o_gram").textContent = "$" + (v("spool") / v("spoolG")).toFixed(3);
+  $("o_hour").textContent = m(perHourWear + perHourPower);
+}
+document.querySelectorAll("input").forEach(e => e.addEventListener("input", calc));
+calc();
+</script>
+</body>
+</html>

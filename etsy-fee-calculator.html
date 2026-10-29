@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Etsy Fee Calculator 2026 – Real Profit After Every Fee (Free)</title>
+<meta name="description" content="Free Etsy fee calculator: see your real profit after the 6.5% transaction fee, payment processing, listing fee, Offsite Ads, materials, shipping and your time. Plus the price you need for your target margin.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<nav><a href="index.html">Free seller tools</a><a class="on" href="etsy-fee-calculator.html">Etsy fee calculator</a><a href="3d-print-cost-calculator.html">3D print cost calculator</a></nav>
+<h1>Etsy Fee Calculator</h1>
+<p class="lead">Type your numbers. See what Etsy really takes, what you really keep, and the price you should charge.</p>
+
+<div class="grid">
+  <div class="card">
+    <h2>Your sale</h2>
+    <label>Item price ($)<input type="number" id="price" value="24" step="0.01" min="0"></label>
+    <label>Shipping you charge ($)<input type="number" id="shipCharged" value="5" step="0.01" min="0"></label>
+    <label>Quantity sold<input type="number" id="qty" value="1" step="1" min="1"></label>
+    <h2 style="margin-top:18px">Your costs (per item)</h2>
+    <label>Materials + packaging ($)<input type="number" id="materials" value="5.70" step="0.01" min="0"></label>
+    <label>Postage you pay ($)<input type="number" id="shipCost" value="5.50" step="0.01" min="0"></label>
+    <label><span>Your time (minutes)<small>making, packing, listing</small></span><input type="number" id="minutes" value="0" step="1" min="0"></label>
+    <label>Your hourly rate ($)<input type="number" id="rate" value="15" step="0.5" min="0"></label>
+    <h2 style="margin-top:18px">Etsy settings</h2>
+    <label><span>Payment processing<small>check the rate for your country</small></span>
+      <select id="proc">
+        <option value="0.03,0.25">US: 3% + $0.25</option>
+        <option value="0.04,0.20">UK: 4% + £0.20</option>
+        <option value="0.04,0.30">EU: 4% + €0.30</option>
+        <option value="0.03,0.25">Canada: 3% + $0.25</option>
+        <option value="0.03,0.25">Australia: 3% + $0.25</option>
+      </select></label>
+    <label><span>Sale came from an Offsite Ad<small>15% (12% if you made $10k+ last year)</small></span>
+      <select id="ads"><option value="0">No</option><option value="0.15">Yes – 15%</option><option value="0.12">Yes – 12%</option></select></label>
+    <label>Target profit margin (%)<input type="number" id="target" value="30" step="1" min="0" max="90"></label>
+  </div>
+
+  <div class="card">
+    <h2>Where your money goes (per item)</h2>
+    <div class="row"><span>Customer pays</span><span id="o_rev"></span></div>
+    <div class="row"><span>Listing fee</span><span id="o_list"></span></div>
+    <div class="row"><span>Transaction fee (6.5%)</span><span id="o_tx"></span></div>
+    <div class="row"><span>Payment processing</span><span id="o_proc"></span></div>
+    <div class="row"><span>Offsite Ads</span><span id="o_ads"></span></div>
+    <div class="row"><span>Materials + packaging</span><span id="o_mat"></span></div>
+    <div class="row"><span>Postage</span><span id="o_ship"></span></div>
+    <div class="row"><span>Your time</span><span id="o_time"></span></div>
+    <div class="row total"><span>Total Etsy fees</span><span id="o_fees"></span></div>
+    <div class="big" id="profitBox"><div class="lab">Your real profit per item</div><div class="val" id="o_profit"></div>
+      <div id="o_margin"></div></div>
+    <div class="verdict" id="o_verdict"></div>
+    <div class="row total"><span>Price for your target margin</span><span id="o_target"></span></div>
+    <div class="row"><span>Profit for this order (× quantity)</span><span id="o_order"></span></div>
+  </div>
+</div>
+
+<div class="cta">
+  <div><h3>Got more than one product?</h3>
+  <p>The Seller Profit Calculator spreadsheet does this for your whole shop at once: every product, Etsy, Shopee, eBay, Amazon Handmade and more, with a sales log and a yearly profit dashboard. Works in Excel and Google Sheets.</p></div>
+  <a class="btn" href="https://easonhy.gumroad.com/l/jljvfml">Get the spreadsheet – $12.99</a>
+</div>
+
+<div class="notes">
+  <h2>How Etsy fees work</h2>
+  <p><b>Listing fee:</b> $0.20 per item listed. It renews when the item sells, so every sale pays it again.</p>
+  <p><b>Transaction fee:</b> 6.5% of the total the customer pays for the item, including the shipping and gift wrap you charge.</p>
+  <p><b>Payment processing:</b> about 3% + $0.25 in the US (varies by country), charged on the full order total.</p>
+  <p><b>Offsite Ads:</b> if a sale comes from an Etsy ad on another site, Etsy takes 15% (or 12% for shops over $10,000 a year), capped at $100 per order.</p>
+  <p>Some countries also add a regulatory operating fee or VAT on fees, so treat the result as a close estimate and check your Etsy payment account for exact numbers.</p>
+  <h2>Why count your time?</h2>
+  <p>If a bracelet takes 25 minutes and you'd value your time at $15 an hour, that's $6.25 of cost. A sale that looks like a $2 profit can be a loss once your time is counted.</p>
+</div>
+<footer>Free tool by <a href="https://easonhy.gumroad.com">Eason's planner &amp; seller tools</a>. Nothing you type leaves your browser.</footer>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const v = id => parseFloat($(id).value) || 0;
+const m = x => (x < 0 ? "-$" : "$") + Math.abs(x).toFixed(2);
+function calc() {
+  const [pp, pf] = $("proc").value.split(",").map(Number);
+  const ads = parseFloat($("ads").value);
+  const price = v("price"), shipC = v("shipCharged"), rev = price + shipC;
+  const list = 0.20, tx = 0.065 * rev, proc = pp * rev + pf, ad = Math.min(ads * rev, 100);
+  const timeCost = v("minutes") / 60 * v("rate");
+  const fees = list + tx + proc + ad;
+  const costs = v("materials") + v("shipCost") + timeCost;
+  const profit = rev - fees - costs;
+  const margin = price > 0 ? profit / rev : 0;
+  // price p so that profit/(p+shipC) = target: (p+s)(1-0.065-pp-ads-t) = list+pf+costs
+  const t = v("target") / 100, k = 1 - 0.065 - pp - ads - t;
+  const need = k > 0 ? (list + pf + costs) / k - shipC : NaN;
+  $("o_rev").textContent = m(rev); $("o_list").textContent = m(-list); $("o_tx").textContent = m(-tx);
+  $("o_proc").textContent = m(-proc); $("o_ads").textContent = m(-ad); $("o_mat").textContent = m(-v("materials"));
+  $("o_ship").textContent = m(-v("shipCost")); $("o_time").textContent = m(-timeCost); $("o_fees").textContent = m(fees);
+  $("o_profit").textContent = m(profit);
+  $("o_margin").textContent = (margin * 100).toFixed(1) + "% margin";
+  $("profitBox").className = "big" + (profit < 0 ? " bad" : "");
+  $("o_verdict").textContent = profit < 0 ? "You are losing money on every sale." :
+    margin < t ? "Below your target – consider raising your price." : "Healthy. Nice.";
+  $("o_verdict").style.color = profit < 0 ? "var(--warn)" : margin < t ? "var(--muted)" : "var(--ok)";
+  $("o_target").textContent = isNaN(need) ? "—" : m(Math.max(need, 0));
+  $("o_order").textContent = m(profit * Math.max(1, Math.round(v("qty"))));
+}
+document.querySelectorAll("input,select").forEach(e => e.addEventListener("input", calc));
+calc();
+</script>
+</body>
+</html>
