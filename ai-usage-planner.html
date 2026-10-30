@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Usage Planner – Get More From Your Claude Pro Plan (Free)</title>
+<meta name="description" content="Free AI usage planner: pick the right Claude model and effort level, see how big your chat is getting, and build a better prompt in 30 seconds. Unofficial tool.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<nav><a href="index.html">Free tools</a><a href="etsy-fee-calculator.html">Etsy fee calculator</a><a href="3d-print-cost-calculator.html">3D print cost calculator</a><a class="on" href="ai-usage-planner.html">AI usage planner</a></nav>
+<h1>AI Usage Planner</h1>
+<p class="lead">Get more out of your Claude plan: the right model, the right effort, a shorter chat, and a better prompt.</p>
+
+<div class="grid">
+  <div class="card">
+    <h2>1 · What are you doing?</h2>
+    <label>Task<select id="task">
+      <option value="quick">Quick question / fact</option>
+      <option value="write">Email, post, rewrite</option>
+      <option value="summary">Summarize a document</option>
+      <option value="plan">Plan or brainstorm</option>
+      <option value="code" selected>Write or fix code</option>
+      <option value="hard">Hard problem / big analysis</option>
+    </select></label>
+    <label>How hard is it?<select id="hard">
+      <option value="1">Easy</option>
+      <option value="2" selected>Normal</option>
+      <option value="3">Really hard</option>
+    </select></label>
+    <div class="big"><div class="lab">Use this model</div><div class="val" id="o_model"></div>
+      <div>Effort: <b id="o_effort"></b></div></div>
+    <p class="verdict" style="font-weight:400;color:var(--muted)" id="o_why"></p>
+  </div>
+
+  <div class="card">
+    <h2>2 · How big is your chat?</h2>
+    <label>Messages so far (you + Claude)<input type="number" id="msgs" value="30" min="0" step="1"></label>
+    <label><span>Average message length<small>words</small></span><input type="number" id="words" value="250" min="1" step="10"></label>
+    <label><span>Files pasted or attached<small>pages, total</small></span><input type="number" id="pages" value="0" min="0" step="1"></label>
+    <div class="row"><span>Chat size now</span><span id="o_size"></span></div>
+    <div class="row"><span>Your next message re-reads</span><span id="o_next"></span></div>
+    <div class="row total"><span>vs. a fresh chat</span><span id="o_ratio"></span></div>
+    <div class="big" id="o_box"><div class="lab">Verdict</div><div class="val" id="o_verdict" style="font-size:28px"></div></div>
+  </div>
+</div>
+
+<div class="card section">
+  <h2>3 · Build a better prompt</h2>
+  <label class="stack">Goal: what do you want?<input type="text" id="p_goal" value="Write a 150-word product description for my handmade candle"></label>
+  <label class="stack">Context: who is it for, what do you already have?<textarea id="p_ctx">Soy candle, vanilla and cedar, 40-hour burn, $24. Sold on Etsy to people buying gifts.</textarea></label>
+  <label class="stack">Rules: tone, length, what to avoid<input type="text" id="p_rules" value="Warm and simple. No emojis. No words like 'elevate' or 'indulge'."></label>
+  <label class="stack">Example of what good looks like (optional)<textarea id="p_ex"></textarea></label>
+  <label class="stack">Output format<input type="text" id="p_fmt" value="A title line, then 3 short paragraphs, then 5 bullet points."></label>
+  <label>Ask me questions first if anything is unclear<input type="checkbox" id="p_ask" checked></label>
+  <div class="out" id="o_prompt"></div>
+  <p><a class="btn" href="#" id="copy">Copy prompt</a> <span id="copied" style="color:var(--muted)"></span></p>
+</div>
+
+<div class="card section">
+  <h2>8 habits that stretch your plan</h2>
+  <ol class="checks">
+    <li><b>New topic, new chat.</b> Every message makes Claude re-read the whole chat, so long chats use more each time.</li>
+    <li><b>Smallest model that does the job.</b> Quick jobs don't need the biggest model.</li>
+    <li><b>High effort only for hard problems.</b> More thinking uses more of your limit.</li>
+    <li><b>Edit, don't argue.</b> Wrong answer? Edit your first message instead of adding "no, I meant…".</li>
+    <li><b>Batch your questions.</b> Five questions in one message, not five messages.</li>
+    <li><b>Put reusable files in a Project.</b> Anthropic says Project content is cached and doesn't count again when reused.</li>
+    <li><b>Don't re-upload the same file.</b> It's already in the chat.</li>
+    <li><b>Check Settings → Usage.</b> See how much of your session and week you've used before a big job.</li>
+  </ol>
+</div>
+
+<div class="cta">
+  <div><h3>Watch the 3-minute version</h3>
+  <p>All of this explained with examples, on the Logic Prints YouTube channel.</p></div>
+  <a class="btn" href="https://www.youtube.com/channel/UCDJc9wBVACzjyGziNVgaRLw/shorts">Watch on YouTube</a>
+</div>
+
+<div class="notes">
+  <h2>Which Claude model should I use?</h2>
+  <p>Claude comes in sizes. The small, fast model (Haiku) is great for quick answers and simple rewrites. The middle one (Sonnet) handles most everyday writing and coding. The biggest (Opus) is for hard reasoning, big codebases and long analysis. Using the biggest model for everything is the fastest way to hit your limit.</p>
+  <h2>Is it Pro or Max?</h2>
+  <p>Pro is $20/month. Max starts at $100/month for 5× Pro's usage. If you only hit the limit now and then, better habits usually fix it. If you hit it every day doing heavy work like coding, Max may be worth it. Check <a href="https://claude.com/pricing">claude.com/pricing</a> for current plans.</p>
+  <h2>How are the numbers worked out?</h2>
+  <p>Rough estimates: about 1.3 tokens per word and about 500 words per page. Real usage also depends on the model, tools, files and thinking effort. Anthropic doesn't publish exact message limits.</p>
+</div>
+<footer>Unofficial free tool, not made by or affiliated with Anthropic. Nothing you type leaves your browser. · <a href="https://easonhy.gumroad.com">easonhy.gumroad.com</a></footer>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const v = id => parseFloat($(id).value) || 0;
+const k = x => x >= 1000 ? (x / 1000).toFixed(x >= 10000 ? 0 : 1) + "k tokens" : Math.round(x) + " tokens";
+const PICK = {
+  quick:   [["Haiku", "Low"], ["Haiku", "Low"], ["Sonnet", "Medium"], "Quick answers don't need a big model."],
+  write:   [["Haiku", "Low"], ["Sonnet", "Low"], ["Sonnet", "Medium"], "Writing is easy work for a mid-size model."],
+  summary: [["Haiku", "Low"], ["Sonnet", "Low"], ["Sonnet", "Medium"], "Summaries are mostly reading, not thinking. Ask all your questions about the document in one message."],
+  plan:    [["Sonnet", "Low"], ["Sonnet", "Medium"], ["Opus", "Medium"], "Give it your constraints up front so you don't need five rounds."],
+  code:    [["Sonnet", "Low"], ["Sonnet", "Medium"], ["Opus", "High"], "Most code is fine on Sonnet. Save Opus for bugs Sonnet can't crack."],
+  hard:    [["Sonnet", "High"], ["Opus", "Medium"], ["Opus", "High"], "This is what the big model and high effort are for."]
+};
+function calc() {
+  const p = PICK[$("task").value], pick = p[v("hard") - 1];
+  $("o_model").textContent = pick[0]; $("o_effort").textContent = pick[1]; $("o_why").textContent = p[3];
+  const per = v("words") * 1.3, files = v("pages") * 500 * 1.3;
+  const size = v("msgs") * per + files, fresh = per + files;
+  $("o_size").textContent = k(size); $("o_next").textContent = k(size + per);
+  const r = (size + per) / Math.max(per, 1);
+  $("o_ratio").textContent = r.toFixed(0) + "× more";
+  const bad = v("msgs") >= 40 || size > 40000;
+  $("o_box").className = "big" + (bad ? " bad" : "");
+  $("o_verdict").textContent = v("msgs") < 15 && size < 15000 ? "Fine, keep going" : bad ? "Start a new chat" : "Wrap up soon";
+  const lines = [];
+  if ($("p_goal").value.trim()) lines.push("Goal: " + $("p_goal").value.trim());
+  if ($("p_ctx").value.trim()) lines.push("\nContext: " + $("p_ctx").value.trim());
+  if ($("p_rules").value.trim()) lines.push("\nRules: " + $("p_rules").value.trim());
+  if ($("p_ex").value.trim()) lines.push("\nHere's an example of what good looks like:\n" + $("p_ex").value.trim());
+  if ($("p_fmt").value.trim()) lines.push("\nFormat: " + $("p_fmt").value.trim());
+  if ($("p_ask").checked) lines.push("\nBefore you start, ask me up to 3 questions if anything important is unclear.");
+  $("o_prompt").textContent = lines.join("\n");
+}
+document.querySelectorAll("input,select,textarea").forEach(e => e.addEventListener("input", calc));
+$("copy").addEventListener("click", e => {
+  e.preventDefault();
+  navigator.clipboard.writeText($("o_prompt").textContent).then(() => { $("copied").textContent = "Copied!"; setTimeout(() => $("copied").textContent = "", 1500); });
+});
+calc();
+</script>
+</body>
+</html>
